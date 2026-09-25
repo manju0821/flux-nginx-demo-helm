@@ -4,4 +4,5 @@ kind: Kustomization
 resources:
   - nginx-helm-repository.yaml
   - nginx-helmrelease.yaml
+  - nginx-test-helmrelease.yaml
   - nginx-helm-kustomization.yaml

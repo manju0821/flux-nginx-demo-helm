@@ -1,0 +1,12 @@
+test:
+  enabled: true
+
+  # NGINX service created by the nginx Helm chart
+  serviceName: nginx-demo
+
+  servicePort: 80
+
+image:
+  repository: busybox
+  tag: "1.36.1"
+  pullPolicy: IfNotPresent

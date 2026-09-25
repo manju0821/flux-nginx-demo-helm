@@ -1,0 +1,40 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "nginx-test.fullname" . }}
+  annotations:
+    "helm.sh/hook": test
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  backoffLimit: 0
+
+  template:
+    spec:
+      restartPolicy: Never
+
+      containers:
+        - name: nginx-test
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+
+          env:
+            - name: NGINX_SERVICE
+              value: "{{ .Values.test.serviceName }}"
+
+            - name: NGINX_PORT
+              value: "{{ .Values.test.servicePort }}"
+
+          command:
+            - /bin/sh
+            - /scripts/nginx-test.sh
+
+          volumeMounts:
+            - name: test-script
+              mountPath: /scripts
+              readOnly: true
+
+      volumes:
+        - name: test-script
+          configMap:
+            name: {{ include "nginx-test.fullname" . }}-script
+            defaultMode: 0755

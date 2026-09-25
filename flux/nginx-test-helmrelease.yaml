@@ -1,0 +1,26 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: nginx-test
+  namespace: flux-system
+spec:
+  interval: 5m
+
+  targetNamespace: nginx-helm
+  releaseName: nginx-test
+
+  dependsOn:
+    - name: nginx-demo
+
+  chart:
+    spec:
+      chart: ./charts/nginx-test
+      sourceRef:
+        kind: GitRepository
+        name: nginx-helm-repository
+        namespace: flux-system
+      interval: 1m
+      reconcileStrategy: Revision
+
+  test:
+    enable: true
